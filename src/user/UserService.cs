@@ -1,8 +1,10 @@
 using AutoMapper;
+using FoodPool.data;
 using FoodPool.share.types;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodPool.user;
 
@@ -14,31 +16,39 @@ public class UserService : IUserService
         new UserEntity { Id = 2, Name = "bxdman" }
     };
 
+
     private readonly IMapper _mapper;
-    
-    public UserService(IMapper mapper)
+    private readonly FoolpoolDbContext _context;
+
+    public UserService(IMapper mapper, FoolpoolDbContext dbContext)
     {
         _mapper = mapper;
+        _context = dbContext;
     }
 
     public async Task<Response<List<GetUserDto>>> GetAll()
     {
-        var query = new Response<List<GetUserDto>>();
-        query.Data = _userEntity.Select(c => _mapper.Map<GetUserDto>(c)).ToList();
-        return query;
+        var response = new Response<List<GetUserDto>>();
+        var query = await _context.User.ToListAsync();
+        response.Data = query.Select(c => _mapper.Map<GetUserDto>(c)).ToList();
+        return response;
     }
 
     public async Task<Response<GetUserDto>> GetById(int id)
     {
-        var query = new Response<GetUserDto>();
-        var user = this._userEntity.FirstOrDefault((c) => c?.Id == id);
-        query.Data = _mapper.Map<GetUserDto>(user);
-        return query;
+        var response = new Response<GetUserDto>();
+        var query = await _context.User.FirstOrDefaultAsync(c => c.Id == id);
+        response.Data = _mapper.Map<GetUserDto>(query);
+        return response;
     }
 
-    public UserEntity Create(UserEntity userEntity)
+    public async Task<Response<GetUserDto>> Create(CreateUserDto createUserDto)
     {
-        this._userEntity.Add(userEntity);
-        return userEntity;
+        var response = new Response<GetUserDto>();
+        var user = _mapper.Map<UserEntity>(createUserDto);
+    
+        _context.User.Add(user);
+        await _context.SaveChangesAsync();
+        return response;
     }
 }

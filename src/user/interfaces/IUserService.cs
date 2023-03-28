@@ -8,5 +8,5 @@ public interface IUserService
 {
     Task<Response<List<GetUserDto>>> GetAll();
     Task<Response<GetUserDto>> GetById(int id);
-    UserEntity Create(UserEntity userEntity);
+    Task<Response<GetUserDto>> Create(CreateUserDto createUserDto);
 }

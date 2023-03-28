@@ -2,6 +2,7 @@ using FoodPool.share.types;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodPool.user;
@@ -11,10 +12,12 @@ namespace FoodPool.user;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IConfiguration _configuration;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService,IConfiguration configuration)
     {
         this._userService = userService;
+        this._configuration = configuration;
     }
 
     [HttpGet]
@@ -30,8 +33,8 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<UserEntity?> Create(UserEntity userEntity)
+    public async Task<ActionResult<Response<GetUserDto>>> Create(CreateUserDto createUserDto)
     {
-        return this._userService.Create(userEntity);
+        return Ok(await this._userService.Create(createUserDto));
     }
 }
