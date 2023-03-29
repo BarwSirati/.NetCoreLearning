@@ -1,4 +1,3 @@
-using FoodPool.share.types;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
@@ -21,19 +20,19 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<Response<List<GetUserDto>>>> GetAll()
+    public async Task<ActionResult<List<GetUserDto>>> GetAll()
     {
         return Ok(await this._userService.GetAll());
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Response<GetUserDto>>> GetById(int id)
+    public async Task<ActionResult<GetUserDto>> GetById(int id)
     {
         return Ok(await this._userService.GetById(id));
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<GetUserDto>>> Create(CreateUserDto createUserDto)
+    public async Task<ActionResult<GetUserDto>> Create(CreateUserDto createUserDto)
     {
         return Ok(await this._userService.Create(createUserDto));
     }
