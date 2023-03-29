@@ -38,6 +38,8 @@ public class UserService : IUserService
     public async Task<HttpStatusCode> Create(CreateUserDto createUserDto)
     {
         var user = _mapper.Map<UserEntity>(createUserDto);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        Console.WriteLine(user.Password);
         _context.User.Add(user);
         await _context.SaveChangesAsync();
         return HttpStatusCode.Created;

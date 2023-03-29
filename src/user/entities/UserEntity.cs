@@ -17,4 +17,8 @@ public class UserEntity
     
     [StringLength(50)]
     public string? Lastname { get; set; }
+
+    [StringLength(50)]
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 }

@@ -1,6 +1,7 @@
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +12,16 @@ namespace FoodPool.user;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<UserController> _logger;
-    public UserController(IUserService userService,IConfiguration configuration,ILogger<UserController> logger)
+
+    public UserController(IUserService userService, ILogger<UserController> logger)
     {
         this._userService = userService;
-        this._configuration = configuration;
         this._logger = logger;
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<List<GetUserDto>>> GetAll()
     {
         return Ok(await this._userService.GetAll());
@@ -32,16 +33,11 @@ public class UserController : ControllerBase
         return Ok(await this._userService.GetById(id));
     }
 
-    [HttpPost]
-    public async Task<ActionResult<GetUserDto>> Create(CreateUserDto createUserDto)
-    {
-        return Ok(await this._userService.Create(createUserDto));
-    }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<GetUserDto>> Update(UpdateUserDto updateUserDto,int id)
+    public async Task<ActionResult<GetUserDto>> Update(UpdateUserDto updateUserDto, int id)
     {
-        return Ok(await this._userService.Update(updateUserDto,id));
+        return Ok(await this._userService.Update(updateUserDto, id));
     }
 
     [HttpDelete("{id}")]

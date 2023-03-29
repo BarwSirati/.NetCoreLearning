@@ -1,4 +1,6 @@
 using AutoMapper;
+using FoodPool.auth.dto;
+using FoodPool.auth.entities;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 
