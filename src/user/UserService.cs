@@ -42,4 +42,42 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
         return HttpStatusCode.Created;
     }
+
+    public async Task<GetUserDto> Update(UpdateUserDto updateUserDto, int id)
+    {
+        var user = await _context.User.FirstOrDefaultAsync(c => c.Id == id);
+        if (user != null)
+        {
+            user.Name = updateUserDto.Name;
+            user.Lastname = updateUserDto.Lastname;
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
+        return _mapper.Map<GetUserDto>(user);
+    }
+
+
+    public async Task<HttpStatusCode> Delete(int id)
+    {
+        try
+        {
+            var user = await _context.User.FirstOrDefaultAsync(c => c.Id == id);
+            if (user != null)
+            {
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return HttpStatusCode.NotFound;
+            }
+
+            return HttpStatusCode.OK;
+        }
+        catch (Exception exception)
+        {
+            return HttpStatusCode.BadRequest;
+        }
+    }
 }

@@ -12,11 +12,12 @@ public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
-
-    public UserController(IUserService userService,IConfiguration configuration)
+    private readonly ILogger<UserController> _logger;
+    public UserController(IUserService userService,IConfiguration configuration,ILogger<UserController> logger)
     {
         this._userService = userService;
         this._configuration = configuration;
+        this._logger = logger;
     }
 
     [HttpGet]
@@ -35,5 +36,17 @@ public class UserController : ControllerBase
     public async Task<ActionResult<GetUserDto>> Create(CreateUserDto createUserDto)
     {
         return Ok(await this._userService.Create(createUserDto));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<GetUserDto>> Update(UpdateUserDto updateUserDto,int id)
+    {
+        return Ok(await this._userService.Update(updateUserDto,id));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<GetUserDto>> Delete(int id)
+    {
+        return Ok(await this._userService.Delete(id));
     }
 }

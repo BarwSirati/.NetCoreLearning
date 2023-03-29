@@ -10,5 +10,6 @@ public class Mapper : Profile
     {
         CreateMap<UserEntity, GetUserDto>();
         CreateMap<CreateUserDto,UserEntity>();
+        CreateMap<UpdateUserDto, UserEntity>();
     }
 }

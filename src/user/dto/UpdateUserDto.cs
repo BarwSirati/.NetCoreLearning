@@ -1,6 +1,6 @@
 namespace FoodPool.user.dto;
 
-public class CreateUserDto
+public class UpdateUserDto
 {
     public string? Name { get; set; }
 
