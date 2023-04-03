@@ -21,4 +21,7 @@ public class UserEntity
     [StringLength(50)]
     public string? Username { get; set; }
     public string? Password { get; set; }
+    
+    [StringLength(10)]
+    public string? Tel { get; set; }
 }

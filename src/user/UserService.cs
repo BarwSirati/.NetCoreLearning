@@ -52,6 +52,8 @@ public class UserService : IUserService
         {
             user.Name = updateUserDto.Name;
             user.Lastname = updateUserDto.Lastname;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
+            user.Tel = updateUserDto.Tel;
             _context.User.Update(user);
             await _context.SaveChangesAsync();
         }

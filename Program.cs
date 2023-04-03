@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -30,10 +29,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["secretKey"]!))
     };
 });
+
 builder.Services.AddAuthorization();
+string connectionString = $"Server={builder.Configuration["DB_HOST"]};Port={builder.Configuration["DB_PORT"]};Database={builder.Configuration["DB_NAME"]};User Id={builder.Configuration["DB_USER"]};Password={builder.Configuration["DB_PASSWD"]}";
 builder.Services.AddDbContext<FoolpoolDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection"));
+    options.UseNpgsql(connectionString);
 });
 
 var app = builder.Build();

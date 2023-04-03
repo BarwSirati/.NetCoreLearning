@@ -21,7 +21,6 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<List<GetUserDto>>> GetAll()
     {
         return Ok(await this._userService.GetAll());
