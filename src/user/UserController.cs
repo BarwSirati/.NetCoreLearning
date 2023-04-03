@@ -1,10 +1,8 @@
 using AutoMapper;
 using FoodPool.provider.interfaces;
 using FoodPool.user.dto;
-using FoodPool.user.entities;
 using FoodPool.user.interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodPool.user;

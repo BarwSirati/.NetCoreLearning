@@ -3,8 +3,6 @@ using FoodPool.data;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 
 namespace FoodPool.user;
 
