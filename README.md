@@ -19,6 +19,19 @@ dotnet restore
 dotnet tool install --global dotnet-ef
 ```
 
+## Setting ⚙️
+### UserSecret
+```json
+{
+  "secretKey": "secretKey",
+  "DB_HOST": "DB_HOST",
+  "DB_PORT": "DB_PORT",
+  "DB_NAME": "DB_NAME",
+  "DB_USER": "DB_USER",
+  "DB_PASSWD": "DB_PASSWD"
+}
+```
+
 ## Start 🔥
 
 ### Run without Hot Reload
