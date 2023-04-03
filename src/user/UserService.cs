@@ -79,7 +79,7 @@ public class UserService : IUserService
 
             return HttpStatusCode.OK;
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             return HttpStatusCode.BadRequest;
         }

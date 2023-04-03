@@ -29,4 +29,11 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="build\appsettings.Development.json" />
+    <_ContentIncludedByDefault Remove="build\appsettings.json" />
+    <_ContentIncludedByDefault Remove="build\FoodPool.deps.json" />
+    <_ContentIncludedByDefault Remove="build\FoodPool.runtimeconfig.json" />
+  </ItemGroup>
+
 </Project>

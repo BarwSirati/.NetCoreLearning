@@ -8,3 +8,11 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 3000:8081
+  db:
+    container_name: database
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: foodpool
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty

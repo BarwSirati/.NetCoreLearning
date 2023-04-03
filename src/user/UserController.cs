@@ -27,6 +27,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<GetUserDto>> GetById(int id)
     {
         return Ok(await this._userService.GetById(id));

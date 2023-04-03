@@ -4,6 +4,8 @@ WORKDIR /app
 EXPOSE $PORT
 
 ENV ASPNETCORE_URLS=http://+:${PORT}
+ENV ConnectionStrings__PostgreSQLConnection="Server=db;Port=5432;Database=foodpool;User Id=postgres;Password=qwerty"
+ENV secretKey=nhh7m^PsCE!2dLzj!%R$C4@RDyr3Es
 
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
@@ -12,7 +14,10 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["FoodPool.csproj", "./"]
 RUN dotnet restore "FoodPool.csproj"
+RUN dotnet tool install --global dotnet-ef
 COPY . .
+RUN export PATH="$PATH:$HOME/.dotnet/tools/"
+RUN dotnet ef database update
 WORKDIR "/src/."
 RUN dotnet build "FoodPool.csproj" -c Release -o /app/build
 
@@ -22,4 +27,5 @@ RUN dotnet publish "FoodPool.csproj" -c Release -o /app/publish /p:UseAppHost=fa
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "FoodPool.dll"]

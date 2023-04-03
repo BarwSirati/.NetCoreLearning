@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.AddEnvironmentVariables();
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,20 +31,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddAuthorization();
-string connectionString = $"Server={builder.Configuration["DB_HOST"]};Port={builder.Configuration["DB_PORT"]};Database={builder.Configuration["DB_NAME"]};User Id={builder.Configuration["DB_USER"]};Password={builder.Configuration["DB_PASSWD"]}";
 builder.Services.AddDbContext<FoolpoolDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection"));
 });
 
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 
