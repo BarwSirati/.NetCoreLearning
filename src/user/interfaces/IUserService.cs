@@ -1,6 +1,5 @@
 using System.Net;
 using FoodPool.user.dto;
-using FoodPool.user.entities;
 
 namespace FoodPool.user.interfaces;
 

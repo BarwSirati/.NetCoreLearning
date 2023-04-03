@@ -13,11 +13,7 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["FoodPool.csproj", "./"]
-RUN dotnet restore "FoodPool.csproj"
-RUN dotnet tool install --global dotnet-ef
 COPY . .
-RUN export PATH="$PATH:$HOME/.dotnet/tools/"
-RUN dotnet ef database update
 WORKDIR "/src/."
 RUN dotnet build "FoodPool.csproj" -c Release -o /app/build
 

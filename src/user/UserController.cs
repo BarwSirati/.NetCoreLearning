@@ -1,3 +1,5 @@
+using AutoMapper;
+using FoodPool.provider.interfaces;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
@@ -11,38 +13,84 @@ namespace FoodPool.user;
 [Route("api/user")]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
-    private readonly ILogger<UserController> _logger;
+    private readonly IUserRepository _userRepository;
+    private readonly IHttpContextProvider _contextProvider;
+    private readonly IMapper _mapper;
 
-    public UserController(IUserService userService, ILogger<UserController> logger)
+    public UserController(IMapper mapper, IUserRepository userRepository, IHttpContextProvider provider)
     {
-        this._userService = userService;
-        this._logger = logger;
+        _userRepository = userRepository;
+        _mapper = mapper;
+        _contextProvider = provider;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<GetUserDto>>> GetAll()
+    public ActionResult<List<GetUserDto>> GetAll()
     {
-        return Ok(await this._userService.GetAll());
+        try
+        {
+            var users = _userRepository.GetAll();
+            return Ok(users.Select(c => _mapper.Map<GetUserDto>(c)).ToList());
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [Authorize]
-    public async Task<ActionResult<GetUserDto>> GetById(int id)
+    public ActionResult<GetUserDto> GetById(int id)
     {
-        return Ok(await this._userService.GetById(id));
+        try
+        {
+            if (_contextProvider.GetCurrentUser() != id)
+                return Unauthorized();
+
+            var user = _userRepository.GetById(id);
+            return Ok(_mapper.Map<GetUserDto>(user));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult<GetUserDto>> Update(UpdateUserDto updateUserDto, int id)
+    [HttpPut("{id:int}")]
+    [Authorize]
+    public ActionResult<GetUserDto> Update(UpdateUserDto updateUserDto, int id)
     {
-        return Ok(await this._userService.Update(updateUserDto, id));
+        try
+        {
+            if (_contextProvider.GetCurrentUser() != id)
+                return Unauthorized();
+            _userRepository.Update(updateUserDto, id);
+            _userRepository.Save();
+            var user = _userRepository.GetById(id);
+            return Ok(_mapper.Map<GetUserDto>(user));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<GetUserDto>> Delete(int id)
+    [Authorize]
+    public ActionResult Delete(int id)
     {
-        return Ok(await this._userService.Delete(id));
+        try
+        {
+            if (_contextProvider.GetCurrentUser() != id)
+                return Unauthorized();
+            _userRepository.Delete(id);
+            _userRepository.Save();
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 }

@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
@@ -8,8 +7,6 @@ using FoodPool.auth.dto;
 using FoodPool.auth.interfaces;
 using FoodPool.data;
 using FoodPool.user.entities;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,7 +17,6 @@ public class AuthService : IAuthService
     private readonly FoolpoolDbContext _context;
     private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
-
 
     public AuthService(FoolpoolDbContext dbContext, IMapper mapper, IConfiguration configuration)
     {
@@ -48,7 +44,7 @@ public class AuthService : IAuthService
     {
         var claim = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userEntity.Id.ToString())
+            new Claim("userId", userEntity.Id.ToString())
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["secretKey"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

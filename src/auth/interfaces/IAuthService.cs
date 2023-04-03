@@ -1,6 +1,5 @@
 using FluentResults;
 using FoodPool.auth.dto;
-using Microsoft.AspNetCore.Mvc;
 
 namespace FoodPool.auth.interfaces;
 

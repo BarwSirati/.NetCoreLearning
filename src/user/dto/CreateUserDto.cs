@@ -17,5 +17,6 @@ public class CreateUserDto
     public string? Password { get; set; }
 
     [Required]
+    [StringLength(10)]
     public string? Tel { get; set; }
 }

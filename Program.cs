@@ -2,6 +2,8 @@ using System.Text;
 using FoodPool.auth;
 using FoodPool.auth.interfaces;
 using FoodPool.data;
+using FoodPool.provider;
+using FoodPool.provider.interfaces;
 using FoodPool.user;
 using FoodPool.user.interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -29,7 +31,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["secretKey"]!))
     };
 });
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IHttpContextProvider, HttpContextProvider>();
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<FoolpoolDbContext>(options =>
 {
@@ -43,6 +46,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<FoolpoolDbContext>();
+    dbContext.Database.EnsureCreated();
 }
 
 app.UseHttpsRedirection();

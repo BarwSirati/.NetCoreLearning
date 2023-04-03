@@ -1,7 +1,8 @@
-using System.Net;
+using AutoMapper;
 using FoodPool.auth.dto;
 using FoodPool.auth.interfaces;
 using FoodPool.user.dto;
+using FoodPool.user.entities;
 using FoodPool.user.interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,21 +12,39 @@ namespace FoodPool.auth;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IUserRepository _userRepository;
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
+    private readonly IMapper _mapper;
 
-    public AuthController(IUserService userService, IAuthService authService, ILogger<AuthController> logger)
+    public AuthController(IMapper mapper, IUserRepository userRepository,
+        IAuthService authService, ILogger<AuthController> logger)
     {
-        _userService = userService;
         _authService = authService;
         _logger = logger;
+        _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<GetUserDto>> Register(CreateUserDto createUserDto)
+    public ActionResult<GetUserDto> Register(CreateUserDto createUserDto)
     {
-        return Ok(await _userService.Create(createUserDto));
+        try
+        {
+            if (_userRepository.Exist(createUserDto.Username!))
+                return Conflict();
+
+
+            var user = _mapper.Map<UserEntity>(createUserDto);
+            _userRepository.Insert(user);
+            _userRepository.Save();
+            var mapUser = _mapper.Map<GetUserDto>(user);
+            return Ok(mapUser);
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPost("login")]
