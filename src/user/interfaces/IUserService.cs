@@ -1,4 +1,4 @@
-using System.Net;
+using FluentResults;
 using FoodPool.user.dto;
 
 namespace FoodPool.user.interfaces;
@@ -7,10 +7,9 @@ public interface IUserService
 {
     Task<List<GetUserDto>> GetAll();
     Task<GetUserDto> GetById(int id);
-    Task<HttpStatusCode> Create(CreateUserDto createUserDto);
+    Result<GetUserDto> Create(CreateUserDto createUserDto);
 
-    Task<GetUserDto> Update(UpdateUserDto updateUserDto,int id);
+    Task<Result<GetUserDto>> Update(UpdateUserDto updateUserDto, int id);
 
-    Task<HttpStatusCode> Delete(int id);
-
+    Result Delete(int id);
 }

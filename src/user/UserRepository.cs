@@ -3,6 +3,7 @@ using FoodPool.data;
 using FoodPool.user.dto;
 using FoodPool.user.entities;
 using FoodPool.user.interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodPool.user;
 
@@ -15,16 +16,16 @@ public class UserRepository : IUserRepository
         _context = dbContext;
     }
 
-    public IEnumerable<UserEntity> GetAll()
+    public async Task<IEnumerable<UserEntity>> GetAll()
     {
-        var users = _context.User;
+        var users = await _context.User.ToListAsync();
         return users;
     }
 
-    public UserEntity GetById(int userId)
+    public async Task<UserEntity> GetById(int userId)
     {
-        var user = _context.User.FirstOrDefault(c => c.Id == userId)!;
-        return user;
+        var user = await _context.User.FirstOrDefaultAsync(c => c.Id == userId)!;
+        return user!;
     }
 
     public bool Exist(string username)
@@ -34,33 +35,26 @@ public class UserRepository : IUserRepository
 
     public void Insert(UserEntity userEntity)
     {
-        var user = _context.User.FirstOrDefault(c => c.Username == userEntity.Username);
-        if (user == null)
-        {
-            userEntity.Password = BCrypt.Net.BCrypt.HashPassword(userEntity.Password);
-            _context.User.Add(userEntity);
-        }
+        _context.User.AddAsync(userEntity);
     }
 
     public void Update(UpdateUserDto updateUserDto, int userId)
     {
         var user = GetById(userId);
-        if (user != null!)
-        {
-            user.Name = updateUserDto.Name;
-            user.Lastname = updateUserDto.Lastname;
-            user.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
-            user.Tel = updateUserDto.Tel;
-        }
+        user.Result.Name = updateUserDto.Name;
+        user.Result.Lastname = updateUserDto.Lastname;
+        user.Result.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
+        user.Result.Tel = updateUserDto.Tel;
     }
 
     public void Delete(int userId)
     {
         var user = GetById(userId);
-        if (user != null!)
-        {
-            _context.User.Remove(user);
-        }
+        _context.User.Remove(user.Result);
+    }
+    public bool ExistById(int userId)
+    {
+        return _context.User.Any(u => u.Id == userId);
     }
 
     public void Save()

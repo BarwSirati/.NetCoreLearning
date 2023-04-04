@@ -18,5 +18,7 @@ public class CreateUserDto
 
     [Required]
     [StringLength(10)]
+    [MinLength(10)]
+    [MaxLength(10)]
     public string? Tel { get; set; }
 }
