@@ -11,18 +11,18 @@ public class UserRepository : IUserRepository
 {
     private readonly FoolpoolDbContext _context;
 
-    public UserRepository(FoolpoolDbContext dbContext, IMapper mapper)
+    public UserRepository(FoolpoolDbContext dbContext)
     {
         _context = dbContext;
     }
 
-    public async Task<IEnumerable<UserEntity>> GetAll()
+    public async Task<List<UserEntity>> GetAll()
     {
         var users = await _context.User.ToListAsync();
         return users;
     }
 
-    public async Task<UserEntity> GetById(int userId)
+    public async Task<UserEntity?> GetById(int userId)
     {
         var user = await _context.User.FirstOrDefaultAsync(c => c.Id == userId)!;
         return user!;

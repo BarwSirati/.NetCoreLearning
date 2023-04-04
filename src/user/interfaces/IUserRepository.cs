@@ -5,8 +5,8 @@ namespace FoodPool.user.interfaces;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<UserEntity>> GetAll();
-    Task<UserEntity> GetById(int userId);
+    Task<List<UserEntity>> GetAll();
+    Task<UserEntity?> GetById(int userId);
     void Insert(UserEntity userEntity);
     void Update(UpdateUserDto updateUserDto, int userId);
     void Delete(int userId);

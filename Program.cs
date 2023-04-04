@@ -2,6 +2,8 @@ using System.Text;
 using FoodPool.auth;
 using FoodPool.auth.interfaces;
 using FoodPool.data;
+using FoodPool.order;
+using FoodPool.order.interfaces;
 using FoodPool.provider;
 using FoodPool.provider.interfaces;
 using FoodPool.user;
@@ -19,7 +21,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
