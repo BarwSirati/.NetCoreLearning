@@ -26,6 +26,14 @@ public class UserController : ControllerBase
         return users;
     }
 
+    [HttpGet("current")]
+    [Authorize]
+    public async Task<ActionResult<GetUserDto>> GetCurrent()
+    {
+        var user = await _userService.GetById(_contextProvider.GetCurrentUser());
+        return user;
+    }
+
     [HttpGet("{id:int}")]
     [Authorize]
     public async Task<ActionResult<GetUserDto>> GetById(int id)

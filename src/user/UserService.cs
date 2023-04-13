@@ -29,13 +29,19 @@ public class UserService : IUserService
         return _mapper.Map<GetUserDto>(user);
     }
 
+    public async Task<UserEntity?> GetByUsername(string username)
+    {
+        var user = await _userRepository.GetByUsername(username);
+        return user;
+    }
+
     public Result<GetUserDto> Create(CreateUserDto createUserDto)
     {
         try
         {
             var user = _mapper.Map<UserEntity>(createUserDto);
             if (_userRepository.Exist(createUserDto.Username!)) return Result.Fail(new Error("Conflict"));
-
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             _userRepository.Insert(user);
             _userRepository.Save();
             return _mapper.Map<GetUserDto>(user);

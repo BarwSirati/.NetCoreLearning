@@ -43,10 +43,16 @@ builder.Services.AddDbContext<FoolpoolDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection"));
 });
-
+const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policyBuilder => { policyBuilder.WithOrigins("http://localhost:3000"); });
+    options.AddPolicy(myAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("*")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
 
 var app = builder.Build();
@@ -59,7 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors(myAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 

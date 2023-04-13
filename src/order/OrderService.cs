@@ -29,7 +29,7 @@ public class OrderService : IOrderService
 
     public async Task<Result<GetOrderDto>> Create(CreateOrderDto createOrderDto)
     {
-        var user = await _userRepository.GetById(createOrderDto.userId);
+        var user = await _userRepository.GetById(createOrderDto.UserId);
         if (user is null) return Result.Fail("Not Found");
 
         var order = new OrderEntity();

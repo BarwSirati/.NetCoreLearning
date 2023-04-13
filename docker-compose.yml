@@ -1,19 +1,12 @@
 version: '3.4'
 
 services:
-  foodpool:
-    image: foodpool_backend
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 3000:8081
   db:
     container_name: database
     image: postgres
     restart: always
     ports:
-      - 5431:5432 
+      - 5432:5432 
     environment:
       POSTGRES_DB: foodpool
       POSTGRES_USER: postgres

@@ -35,10 +35,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<JwtDto>> Login(AuthDto authDto)
     {
         var result = await _authService.Login(authDto);
-        if (result.IsFailed)
-        {
-            return BadRequest(result.Errors);
-        }
+        if (result.IsFailed) return BadRequest(result.Errors);
 
         return Ok(result.Value);
     }

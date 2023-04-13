@@ -7,6 +7,8 @@ public interface IUserRepository
 {
     Task<List<UserEntity>> GetAll();
     Task<UserEntity?> GetById(int userId);
+
+    Task<UserEntity?> GetByUsername(string username);
     void Insert(UserEntity userEntity);
     void Update(UpdateUserDto updateUserDto, int userId);
     void Delete(int userId);

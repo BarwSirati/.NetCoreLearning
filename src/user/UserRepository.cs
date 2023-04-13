@@ -28,6 +28,12 @@ public class UserRepository : IUserRepository
         return user!;
     }
 
+    public async Task<UserEntity?> GetByUsername(string username)
+    {
+        var user = await _context.User.FirstOrDefaultAsync(c => c.Username == username);
+        return user!;
+    }
+
     public bool Exist(string username)
     {
         return _context.User.Any(u => u.Username == username);
@@ -41,17 +47,21 @@ public class UserRepository : IUserRepository
     public void Update(UpdateUserDto updateUserDto, int userId)
     {
         var user = GetById(userId);
-        user.Result.Name = updateUserDto.Name;
-        user.Result.Lastname = updateUserDto.Lastname;
-        user.Result.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
-        user.Result.Tel = updateUserDto.Tel;
+        if (user.Result != null)
+        {
+            user.Result.Name = updateUserDto.Name;
+            user.Result.Lastname = updateUserDto.Lastname;
+            user.Result.Password = BCrypt.Net.BCrypt.HashPassword(updateUserDto.Password);
+            user.Result.Tel = updateUserDto.Tel;
+        }
     }
 
     public void Delete(int userId)
     {
         var user = GetById(userId);
-        _context.User.Remove(user.Result);
+        _context.User.Remove(user.Result!);
     }
+
     public bool ExistById(int userId)
     {
         return _context.User.Any(u => u.Id == userId);

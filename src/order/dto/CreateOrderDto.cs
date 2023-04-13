@@ -5,5 +5,5 @@ namespace FoodPool.order.dto;
 
 public class CreateOrderDto
 {
-    [Required] public int userId { get; set; }
+    [Required] public int UserId { get; set; }
 }
